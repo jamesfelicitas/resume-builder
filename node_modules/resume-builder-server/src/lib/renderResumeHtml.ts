@@ -80,7 +80,7 @@ export function renderResumeHtml(resume: ResumePayload) {
           body {
             margin: 0;
             color: #000;
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 11pt;
             line-height: 1.25;
           }
@@ -144,7 +144,7 @@ export function renderResumeHtml(resume: ResumePayload) {
 
           ${resume.projects.length ? `<section><h2>Projects</h2>${projectHtml}</section>` : ''}
 
-          ${resume.skills.length ? `<section><h2>Skills</h2><p>${escapeHtml(resume.skills.join(' | '))}</p></section>` : ''}
+          ${resume.skills.length ? `<section><h2>Skills</h2><p class="resume-paragraph">${escapeHtml(resume.skills.join(' | '))}</p></section>` : ''}
           ${awardsHtml}
           ${publicationsHtml}
         </article>
