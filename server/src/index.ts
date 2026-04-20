@@ -6,9 +6,13 @@ const app = express();
 const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 
 const corsOptions = {
-  origin: true,
+  origin: [
+    'https://resume-builder-client-peach.vercel.app',
+    'http://localhost:3000',
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
