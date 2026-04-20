@@ -56,15 +56,15 @@ export function renderResumeHtml(resume: ResumePayload) {
     .join('');
 
   const summaryHtml = resume.summary
-    ? `<section><h2>Summary</h2><p>${escapeHtml(resume.summary)}</p></section>`
+    ? `<section><h2>Summary</h2><p class="resume-paragraph">${escapeHtml(resume.summary)}</p></section>`
     : '';
 
   const awardsHtml = resume.awards.length
-    ? `<section><h2>Awards</h2><p>${escapeHtml(resume.awards.join(' | '))}</p></section>`
+    ? `<section><h2>Awards</h2><p class="resume-paragraph">${escapeHtml(resume.awards.join(' | '))}</p></section>`
     : '';
 
   const publicationsHtml = resume.publications.length
-    ? `<section><h2>Publications</h2><p>${escapeHtml(resume.publications.join(' | '))}</p></section>`
+    ? `<section><h2>Publications</h2><p class="resume-paragraph">${escapeHtml(resume.publications.join(' | '))}</p></section>`
     : '';
 
   return `
@@ -114,6 +114,11 @@ export function renderResumeHtml(resume: ResumePayload) {
           .resume-item ul {
             margin: 6px 0 0 18px;
             padding: 0;
+          }
+          .resume-paragraph {
+            margin: 0;
+            text-align: justify;
+            text-justify: inter-word;
           }
         </style>
       </head>

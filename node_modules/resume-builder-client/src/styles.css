@@ -238,6 +238,12 @@ textarea {
   font-size: 22pt;
 }
 
+.resume-paragraph {
+  margin: 0;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 .contact-line {
   margin: 4px 0 0;
 }
