@@ -5,18 +5,44 @@ import { HarvardResumePreview } from './components/HarvardResumePreview';
 import type { ResumeData } from './types';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+const draftIdKey = 'resume-builder:draft-id';
+const draftResumeKey = 'resume-builder:draft-resume';
+
+function loadStoredResume() {
+  const storedResume = window.localStorage.getItem(draftResumeKey);
+
+  if (!storedResume) {
+    return defaultResume;
+  }
+
+  try {
+    return JSON.parse(storedResume) as ResumeData;
+  } catch {
+    return defaultResume;
+  }
+}
 
 export default function App() {
-  const [resume, setResume] = useState<ResumeData>(defaultResume);
+  const [resume, setResume] = useState<ResumeData>(() => loadStoredResume());
   const [draftId, setDraftId] = useState<string | null>(null);
   const [status, setStatus] = useState('Ready');
 
   const draftPayload = useMemo(() => JSON.stringify(resume), [resume]);
 
   useEffect(() => {
-    window.localStorage.removeItem('resume-builder:draft-id');
-    void createDraft(defaultResume);
+    const storedDraftId = window.localStorage.getItem(draftIdKey);
+
+    if (!storedDraftId) {
+      void createDraft(resume);
+      return;
+    }
+
+    void loadDraft(storedDraftId);
   }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(draftResumeKey, draftPayload);
+  }, [draftPayload]);
 
   useEffect(() => {
     if (!draftId) {
@@ -49,7 +75,7 @@ export default function App() {
     const data = await response.json() as { id: string; resume: ResumeData };
     setDraftId(data.id);
     setResume(data.resume);
-    window.localStorage.setItem('resume-builder:draft-id', data.id);
+    window.localStorage.setItem(draftIdKey, data.id);
     setStatus('Draft loaded');
   }
 
@@ -59,14 +85,16 @@ export default function App() {
     const response = await fetch(`${apiBaseUrl}/api/resumes/${id}`);
 
     if (!response.ok) {
-      window.localStorage.removeItem('resume-builder:draft-id');
-      await createDraft(defaultResume);
+      window.localStorage.removeItem(draftIdKey);
+      await createDraft(resume);
       return;
     }
 
     const data = await response.json() as { id: string; resume: ResumeData };
     setDraftId(data.id);
     setResume(data.resume);
+    window.localStorage.setItem(draftIdKey, data.id);
+    window.localStorage.setItem(draftResumeKey, JSON.stringify(data.resume));
     setStatus('Draft loaded');
   }
 
@@ -82,7 +110,7 @@ export default function App() {
     });
 
     if (response.status === 404) {
-      window.localStorage.removeItem('resume-builder:draft-id');
+      window.localStorage.removeItem(draftIdKey);
       await createDraft(nextResume);
       return;
     }
