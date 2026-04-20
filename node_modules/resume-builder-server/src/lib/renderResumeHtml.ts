@@ -55,6 +55,18 @@ export function renderResumeHtml(resume: ResumePayload) {
     `)
     .join('');
 
+  const summaryHtml = resume.summary
+    ? `<section><h2>Summary</h2><p>${escapeHtml(resume.summary)}</p></section>`
+    : '';
+
+  const awardsHtml = resume.awards.length
+    ? `<section><h2>Awards</h2><p>${escapeHtml(resume.awards.join(' | '))}</p></section>`
+    : '';
+
+  const publicationsHtml = resume.publications.length
+    ? `<section><h2>Publications</h2><p>${escapeHtml(resume.publications.join(' | '))}</p></section>`
+    : '';
+
   return `
     <!doctype html>
     <html lang="en">
@@ -113,7 +125,7 @@ export function renderResumeHtml(resume: ResumePayload) {
             <p class="contact-line">${escapeHtml(resume.basics.linkedin)} | ${escapeHtml(resume.basics.website)}</p>
           </header>
 
-          ${resume.summary ? `<section><h2>Summary</h2><p>${escapeHtml(resume.summary)}</p></section>` : ''}
+          ${summaryHtml}
 
           <section>
             <h2>Education</h2>
@@ -128,8 +140,8 @@ export function renderResumeHtml(resume: ResumePayload) {
           ${resume.projects.length ? `<section><h2>Projects</h2>${projectHtml}</section>` : ''}
 
           ${resume.skills.length ? `<section><h2>Skills</h2><p>${escapeHtml(resume.skills.join(' | '))}</p></section>` : ''}
-          ${resume.awards.length ? `<section><h2>Awards</h2><p>${escapeHtml(resume.awards.join(' | '))}</p></section>` : ''}
-          ${resume.publications.length ? `<section><h2>Publications</h2><p>${escapeHtml(resume.publications.join(' | '))}</p></section>` : ''}
+          ${awardsHtml}
+          ${publicationsHtml}
         </article>
       </body>
     </html>

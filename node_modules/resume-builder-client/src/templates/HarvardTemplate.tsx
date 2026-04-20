@@ -18,6 +18,13 @@ export function HarvardTemplate({ resume }: Props) {
         </p>
       </header>
 
+      {resume.summary ? (
+        <section>
+          <h2>Summary</h2>
+          <p>{resume.summary}</p>
+        </section>
+      ) : null}
+
       <section>
         <h2>Education</h2>
         {resume.education.map((entry) => (
@@ -85,6 +92,20 @@ export function HarvardTemplate({ resume }: Props) {
         <h2>Skills</h2>
         <p>{resume.skills.join(' | ')}</p>
       </section>
+
+      {resume.awards.length ? (
+        <section>
+          <h2>Awards</h2>
+          <p>{resume.awards.join(' | ')}</p>
+        </section>
+      ) : null}
+
+      {resume.publications.length ? (
+        <section>
+          <h2>Publications</h2>
+          <p>{resume.publications.join(' | ')}</p>
+        </section>
+      ) : null}
     </article>
   );
 }

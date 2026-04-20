@@ -14,14 +14,8 @@ export default function App() {
   const draftPayload = useMemo(() => JSON.stringify(resume), [resume]);
 
   useEffect(() => {
-    const storedDraftId = window.localStorage.getItem('resume-builder:draft-id');
-
-    if (!storedDraftId) {
-      void createDraft(defaultResume);
-      return;
-    }
-
-    void loadDraft(storedDraftId);
+    window.localStorage.removeItem('resume-builder:draft-id');
+    void createDraft(defaultResume);
   }, []);
 
   useEffect(() => {
@@ -86,6 +80,12 @@ export default function App() {
       },
       body: JSON.stringify(nextResume),
     });
+
+    if (response.status === 404) {
+      window.localStorage.removeItem('resume-builder:draft-id');
+      await createDraft(nextResume);
+      return;
+    }
 
     if (!response.ok) {
       setStatus('Save failed');
