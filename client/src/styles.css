@@ -81,6 +81,61 @@ textarea {
   gap: 16px;
 }
 
+.category-card {
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.74);
+  padding: 0;
+  overflow: hidden;
+}
+
+.category-card[open] {
+  background: #ffffff;
+}
+
+.section-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(17, 17, 17, 0.82);
+}
+
+.section-summary::-webkit-details-marker {
+  display: none;
+}
+
+.section-summary::after {
+  content: '+';
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.category-card[open] > .section-summary::after {
+  content: '−';
+}
+
+.category-card > :not(.section-summary) {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.category-card > .section-actions {
+  padding-top: 0;
+}
+
+.category-card > .builder-stack {
+  padding-bottom: 16px;
+}
+
 .builder-header-row {
   display: flex;
   align-items: center;

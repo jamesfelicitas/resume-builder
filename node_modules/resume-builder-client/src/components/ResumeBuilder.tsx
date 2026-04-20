@@ -114,8 +114,8 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
         </button>
       </div>
 
-      <section className="builder-section">
-        <h3>Basics</h3>
+      <details className="builder-section category-card" open>
+        <summary className="section-summary">Profile</summary>
         <label>
           Name
           <input value={resume.basics.name} onChange={(event) => updateBasics('name', event.target.value)} />
@@ -148,11 +148,11 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
             onChange={(event) => onChange((current) => ({ ...current, summary: event.target.value }))}
           />
         </label>
-      </section>
+      </details>
 
       <SectionCollection title="Education" onAdd={addEducation}>
         {resume.education.map((entry, index) => (
-          <div key={`${entry.school}-${index}`} className="repeatable-card">
+          <div key={`education-${index}`} className="repeatable-card">
             <label>
               School
               <input value={entry.school} onChange={(event) => updateEducation(index, 'school', event.target.value)} />
@@ -189,7 +189,7 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
 
       <SectionCollection title="Experience" onAdd={addExperience}>
         {resume.experience.map((entry, index) => (
-          <div key={`${entry.organization}-${index}`} className="repeatable-card">
+          <div key={`experience-${index}`} className="repeatable-card">
             <label>
               Role
               <input value={entry.title} onChange={(event) => updateExperience(index, 'title', event.target.value)} />
@@ -226,7 +226,7 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
 
       <SectionCollection title="Projects" onAdd={addProject}>
         {resume.projects.map((entry, index) => (
-          <div key={`${entry.title}-${index}`} className="repeatable-card">
+          <div key={`project-${index}`} className="repeatable-card">
             <label>
               Project
               <input value={entry.title} onChange={(event) => updateProject(index, 'title', event.target.value)} />
@@ -301,14 +301,15 @@ type SectionCollectionProps = {
 
 function SectionCollection({ title, onAdd, children }: SectionCollectionProps) {
   return (
-    <section className="builder-section">
-      <div className="builder-header-row">
+    <details className="builder-section category-card">
+      <summary className="section-summary">{title}</summary>
+      <div className="builder-header-row section-actions">
         <h3>{title}</h3>
         <button type="button" className="secondary-button" onClick={onAdd}>
           Add {title}
         </button>
       </div>
       <div className="builder-stack">{children}</div>
-    </section>
+    </details>
   );
 }
