@@ -54,6 +54,13 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
     }));
   }
 
+  function removeListItem(section: 'skills' | 'awards' | 'publications', index: number) {
+    onChange((current) => ({
+      ...current,
+      [section]: current[section].filter((_, itemIndex) => itemIndex !== index),
+    }));
+  }
+
   function addEducation() {
     onChange((current) => ({
       ...current,
@@ -263,28 +270,43 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
 
       <SectionCollection title="Skills" onAdd={() => addListItem('skills')}>
         {resume.skills.map((skill, index) => (
-          <label key={`skill-${index}`}>
-            Skill {index + 1}
-            <input value={skill} onChange={(event) => updateListSection('skills', index, event.target.value)} />
-          </label>
+          <div key={`skill-${index}`} className="repeatable-row">
+            <label>
+              Skill {index + 1}
+              <input value={skill} onChange={(event) => updateListSection('skills', index, event.target.value)} />
+            </label>
+            <button type="button" className="secondary-button remove-button" onClick={() => removeListItem('skills', index)}>
+              Remove
+            </button>
+          </div>
         ))}
       </SectionCollection>
 
       <SectionCollection title="Awards" onAdd={() => addListItem('awards')}>
         {resume.awards.map((award, index) => (
-          <label key={`award-${index}`}>
-            Award {index + 1}
-            <input value={award} onChange={(event) => updateListSection('awards', index, event.target.value)} />
-          </label>
+          <div key={`award-${index}`} className="repeatable-row">
+            <label>
+              Award {index + 1}
+              <input value={award} onChange={(event) => updateListSection('awards', index, event.target.value)} />
+            </label>
+            <button type="button" className="secondary-button remove-button" onClick={() => removeListItem('awards', index)}>
+              Remove
+            </button>
+          </div>
         ))}
       </SectionCollection>
 
       <SectionCollection title="Publications" onAdd={() => addListItem('publications')}>
         {resume.publications.map((publication, index) => (
-          <label key={`publication-${index}`}>
-            Publication {index + 1}
-            <input value={publication} onChange={(event) => updateListSection('publications', index, event.target.value)} />
-          </label>
+          <div key={`publication-${index}`} className="repeatable-row">
+            <label>
+              Publication {index + 1}
+              <input value={publication} onChange={(event) => updateListSection('publications', index, event.target.value)} />
+            </label>
+            <button type="button" className="secondary-button remove-button" onClick={() => removeListItem('publications', index)}>
+              Remove
+            </button>
+          </div>
         ))}
       </SectionCollection>
 

@@ -80,7 +80,7 @@ export function renderResumeHtml(resume: ResumePayload) {
           body {
             margin: 0;
             color: #000;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: Calibri, Arial, Helvetica, sans-serif;
             font-size: 11pt;
             line-height: 1.25;
           }
