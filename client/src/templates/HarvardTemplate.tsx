@@ -31,13 +31,13 @@ export function HarvardTemplate({ resume }: Props) {
           <div key={`${entry.school}-${entry.degree}`} className="resume-item">
             <div className="resume-item-row">
               <strong>{entry.school}</strong>
-              <span>{entry.startDate} - {entry.endDate}</span>
+              <span>{entry.location}</span>
             </div>
             <div className="resume-item-row">
               <span>{entry.degree}</span>
-              <span>{entry.location}</span>
+              <span>{entry.startDate} - {entry.endDate}</span>
             </div>
-            <ul>
+            <ul className="resume-bullets">
               {entry.details.map((detail) => (
                 <li key={detail}>{detail}</li>
               ))}
@@ -52,13 +52,13 @@ export function HarvardTemplate({ resume }: Props) {
           <div key={`${entry.organization}-${entry.title}`} className="resume-item">
             <div className="resume-item-row">
               <strong>{entry.title}</strong>
-              <span>{entry.startDate} - {entry.endDate}</span>
+              <span>{entry.location}</span>
             </div>
             <div className="resume-item-row">
               <span>{entry.organization}</span>
-              <span>{entry.location}</span>
+              <span>{entry.startDate} - {entry.endDate}</span>
             </div>
-            <ul>
+            <ul className="resume-bullets">
               {entry.bullets.map((bullet) => (
                 <li key={bullet}>{bullet}</li>
               ))}
@@ -73,13 +73,13 @@ export function HarvardTemplate({ resume }: Props) {
           <div key={`${entry.organization}-${entry.title}`} className="resume-item">
             <div className="resume-item-row">
               <strong>{entry.title}</strong>
-              <span>{entry.startDate} - {entry.endDate}</span>
+              <span>{entry.location}</span>
             </div>
             <div className="resume-item-row">
               <span>{entry.organization}</span>
-              <span>{entry.location}</span>
+              <span>{entry.startDate} - {entry.endDate}</span>
             </div>
-            <ul>
+            <ul className="resume-bullets">
               {entry.bullets.map((bullet) => (
                 <li key={bullet}>{bullet}</li>
               ))}

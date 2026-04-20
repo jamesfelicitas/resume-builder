@@ -6,13 +6,13 @@ export function renderResumeHtml(resume: ResumePayload) {
       <div class="resume-item">
         <div class="resume-item-row">
           <strong>${escapeHtml(entry.school)}</strong>
-          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
+          <span>${escapeHtml(entry.location ?? '')}</span>
         </div>
         <div class="resume-item-row">
           <span>${escapeHtml(entry.degree)}</span>
-          <span>${escapeHtml(entry.location ?? '')}</span>
+          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
         </div>
-        <ul>
+        <ul class="resume-bullets">
           ${entry.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join('')}
         </ul>
       </div>
@@ -24,13 +24,13 @@ export function renderResumeHtml(resume: ResumePayload) {
       <div class="resume-item">
         <div class="resume-item-row">
           <strong>${escapeHtml(entry.title)}</strong>
-          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
+          <span>${escapeHtml(entry.location ?? '')}</span>
         </div>
         <div class="resume-item-row">
           <span>${escapeHtml(entry.organization)}</span>
-          <span>${escapeHtml(entry.location ?? '')}</span>
+          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
         </div>
-        <ul>
+        <ul class="resume-bullets">
           ${entry.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join('')}
         </ul>
       </div>
@@ -42,13 +42,13 @@ export function renderResumeHtml(resume: ResumePayload) {
       <div class="resume-item">
         <div class="resume-item-row">
           <strong>${escapeHtml(entry.title)}</strong>
-          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
+          <span>${escapeHtml(entry.location ?? '')}</span>
         </div>
         <div class="resume-item-row">
           <span>${escapeHtml(entry.organization)}</span>
-          <span>${escapeHtml(entry.location ?? '')}</span>
+          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
         </div>
-        <ul>
+        <ul class="resume-bullets">
           ${entry.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join('')}
         </ul>
       </div>
@@ -114,6 +114,11 @@ export function renderResumeHtml(resume: ResumePayload) {
           .resume-item ul {
             margin: 6px 0 0 18px;
             padding: 0;
+          }
+          .resume-bullets li {
+            margin-bottom: 4px;
+            text-align: justify;
+            text-justify: inter-word;
           }
           .resume-paragraph {
             margin: 0;

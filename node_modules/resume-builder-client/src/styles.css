@@ -282,6 +282,26 @@ section h2 {
   gap: 12px;
 }
 
+.resume-item-row > span {
+  min-width: 0;
+}
+
+.resume-item-row > span:last-child {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.resume-bullets {
+  margin: 6px 0 0 18px;
+  padding: 0;
+}
+
+.resume-bullets li {
+  margin-bottom: 4px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
 .resume-item ul {
   margin: 6px 0 0 18px;
   padding: 0;

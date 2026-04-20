@@ -142,8 +142,10 @@ export default function App() {
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = `${resume.basics.name || 'resume'}.pdf`;
+    document.body.appendChild(anchor);
     anchor.click();
-    window.URL.revokeObjectURL(url);
+    document.body.removeChild(anchor);
+    window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
     setStatus('PDF ready');
   }
 
