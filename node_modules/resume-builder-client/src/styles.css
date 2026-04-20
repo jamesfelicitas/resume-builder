@@ -60,6 +60,10 @@ textarea {
   color: rgba(17, 17, 17, 0.72);
 }
 
+.mobile-preview-toggle {
+  display: none;
+}
+
 .app-layout {
   display: grid;
   grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
@@ -308,8 +312,21 @@ section h2 {
 }
 
 @media (max-width: 960px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .mobile-preview-toggle {
+    display: inline-flex;
+    margin-top: 6px;
+  }
+
   .app-layout {
     grid-template-columns: 1fr;
+  }
+
+  .hidden-mobile {
+    display: none;
   }
 
   .preview-panel {

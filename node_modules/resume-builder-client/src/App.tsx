@@ -5,7 +5,6 @@ import { HarvardResumePreview } from './components/HarvardResumePreview';
 import type { ResumeData } from './types';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
-const draftIdKey = 'resume-builder:draft-id';
 const draftResumeKey = 'resume-builder:draft-resume';
 
 function loadStoredResume() {
@@ -22,22 +21,25 @@ function loadStoredResume() {
   }
 }
 
+function toSafePdfFileName(value: string) {
+  const cleaned = value
+    .replace(/[\\/:*?"<>|\x00-\x1f]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  return cleaned || 'resume';
+}
+
 export default function App() {
   const [resume, setResume] = useState<ResumeData>(() => loadStoredResume());
   const [draftId, setDraftId] = useState<string | null>(null);
   const [status, setStatus] = useState('Ready');
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   const draftPayload = useMemo(() => JSON.stringify(resume), [resume]);
 
   useEffect(() => {
-    const storedDraftId = window.localStorage.getItem(draftIdKey);
-
-    if (!storedDraftId) {
-      void createDraft(resume);
-      return;
-    }
-
-    void loadDraft(storedDraftId);
+    void createDraft(resume);
   }, []);
 
   useEffect(() => {
@@ -75,26 +77,6 @@ export default function App() {
     const data = await response.json() as { id: string; resume: ResumeData };
     setDraftId(data.id);
     setResume(data.resume);
-    window.localStorage.setItem(draftIdKey, data.id);
-    setStatus('Draft loaded');
-  }
-
-  async function loadDraft(id: string) {
-    setStatus('Loading draft...');
-
-    const response = await fetch(`${apiBaseUrl}/api/resumes/${id}`);
-
-    if (!response.ok) {
-      window.localStorage.removeItem(draftIdKey);
-      await createDraft(resume);
-      return;
-    }
-
-    const data = await response.json() as { id: string; resume: ResumeData };
-    setDraftId(data.id);
-    setResume(data.resume);
-    window.localStorage.setItem(draftIdKey, data.id);
-    window.localStorage.setItem(draftResumeKey, JSON.stringify(data.resume));
     setStatus('Draft loaded');
   }
 
@@ -110,7 +92,6 @@ export default function App() {
     });
 
     if (response.status === 404) {
-      window.localStorage.removeItem(draftIdKey);
       await createDraft(nextResume);
       return;
     }
@@ -124,29 +105,47 @@ export default function App() {
   }
 
   async function exportPdf() {
-    if (!draftId) {
-      return;
-    }
+    try {
+      setStatus('Preparing PDF...');
+      const response = await fetch(`${apiBaseUrl}/api/resumes/export/pdf/direct`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resume),
+      });
 
-    const response = await fetch(`${apiBaseUrl}/api/resumes/${draftId}/export/pdf`, {
-      method: 'POST',
-    });
+      if (!response.ok) {
+        setStatus('PDF export failed');
+        return;
+      }
 
-    if (!response.ok) {
+      const contentType = response.headers.get('content-type') ?? '';
+
+      if (!contentType.toLowerCase().includes('application/pdf')) {
+        setStatus('PDF export failed');
+        return;
+      }
+
+      const blob = await response.blob();
+
+      if (blob.size === 0) {
+        setStatus('PDF export failed');
+        return;
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `${toSafePdfFileName(resume.basics.name)}.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      setStatus('PDF ready');
+    } catch {
       setStatus('PDF export failed');
-      return;
     }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `${resume.basics.name || 'resume'}.pdf`;
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-    setStatus('PDF ready');
   }
 
   return (
@@ -154,16 +153,22 @@ export default function App() {
       <header className="app-header">
         <div>
           <p className="eyebrow">Harvard-style resume builder</p>
-          
+          <button
+            type="button"
+            className="secondary-button mobile-preview-toggle"
+            onClick={() => setShowMobilePreview((current) => !current)}
+          >
+            {showMobilePreview ? 'Back to Editor' : 'Preview'}
+          </button>
         </div>
       </header>
 
       <main className="app-layout">
-        <section className="editor-panel">
+        <section className={`editor-panel ${showMobilePreview ? 'hidden-mobile' : ''}`}>
           <ResumeBuilder resume={resume} onChange={setResume} onExportPdf={exportPdf} />
         </section>
 
-        <section className="preview-panel">
+        <section className={`preview-panel ${showMobilePreview ? '' : 'hidden-mobile'}`}>
           <HarvardResumePreview resume={resume} />
         </section>
       </main>

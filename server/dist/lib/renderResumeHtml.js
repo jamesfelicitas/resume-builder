@@ -4,13 +4,13 @@ export function renderResumeHtml(resume) {
       <div class="resume-item">
         <div class="resume-item-row">
           <strong>${escapeHtml(entry.school)}</strong>
-          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
+          <span>${escapeHtml(entry.location ?? '')}</span>
         </div>
         <div class="resume-item-row">
           <span>${escapeHtml(entry.degree)}</span>
-          <span>${escapeHtml(entry.location ?? '')}</span>
+          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
         </div>
-        <ul>
+        <ul class="resume-bullets">
           ${entry.details.map((detail) => `<li>${escapeHtml(detail)}</li>`).join('')}
         </ul>
       </div>
@@ -21,13 +21,13 @@ export function renderResumeHtml(resume) {
       <div class="resume-item">
         <div class="resume-item-row">
           <strong>${escapeHtml(entry.title)}</strong>
-          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
+          <span>${escapeHtml(entry.location ?? '')}</span>
         </div>
         <div class="resume-item-row">
           <span>${escapeHtml(entry.organization)}</span>
-          <span>${escapeHtml(entry.location ?? '')}</span>
+          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
         </div>
-        <ul>
+        <ul class="resume-bullets">
           ${entry.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join('')}
         </ul>
       </div>
@@ -38,18 +38,27 @@ export function renderResumeHtml(resume) {
       <div class="resume-item">
         <div class="resume-item-row">
           <strong>${escapeHtml(entry.title)}</strong>
-          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
+          <span>${escapeHtml(entry.location ?? '')}</span>
         </div>
         <div class="resume-item-row">
           <span>${escapeHtml(entry.organization)}</span>
-          <span>${escapeHtml(entry.location ?? '')}</span>
+          <span>${escapeHtml(entry.startDate)} - ${escapeHtml(entry.endDate)}</span>
         </div>
-        <ul>
+        <ul class="resume-bullets">
           ${entry.bullets.map((bullet) => `<li>${escapeHtml(bullet)}</li>`).join('')}
         </ul>
       </div>
     `)
         .join('');
+    const summaryHtml = resume.summary
+        ? `<section><h2>Summary</h2><p class="resume-paragraph">${escapeHtml(resume.summary)}</p></section>`
+        : '';
+    const awardsHtml = resume.awards.length
+        ? `<section><h2>Awards</h2><p class="resume-paragraph">${escapeHtml(resume.awards.join(' | '))}</p></section>`
+        : '';
+    const publicationsHtml = resume.publications.length
+        ? `<section><h2>Publications</h2><p class="resume-paragraph">${escapeHtml(resume.publications.join(' | '))}</p></section>`
+        : '';
     return `
     <!doctype html>
     <html lang="en">
@@ -63,7 +72,7 @@ export function renderResumeHtml(resume) {
           body {
             margin: 0;
             color: #000;
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: Calibri, Arial, Helvetica, sans-serif;
             font-size: 11pt;
             line-height: 1.25;
           }
@@ -98,6 +107,16 @@ export function renderResumeHtml(resume) {
             margin: 6px 0 0 18px;
             padding: 0;
           }
+          .resume-bullets li {
+            margin-bottom: 4px;
+            text-align: justify;
+            text-justify: inter-word;
+          }
+          .resume-paragraph {
+            margin: 0;
+            text-align: justify;
+            text-justify: inter-word;
+          }
         </style>
       </head>
       <body>
@@ -108,7 +127,7 @@ export function renderResumeHtml(resume) {
             <p class="contact-line">${escapeHtml(resume.basics.linkedin)} | ${escapeHtml(resume.basics.website)}</p>
           </header>
 
-          ${resume.summary ? `<section><h2>Summary</h2><p>${escapeHtml(resume.summary)}</p></section>` : ''}
+          ${summaryHtml}
 
           <section>
             <h2>Education</h2>
@@ -122,9 +141,9 @@ export function renderResumeHtml(resume) {
 
           ${resume.projects.length ? `<section><h2>Projects</h2>${projectHtml}</section>` : ''}
 
-          ${resume.skills.length ? `<section><h2>Skills</h2><p>${escapeHtml(resume.skills.join(' | '))}</p></section>` : ''}
-          ${resume.awards.length ? `<section><h2>Awards</h2><p>${escapeHtml(resume.awards.join(' | '))}</p></section>` : ''}
-          ${resume.publications.length ? `<section><h2>Publications</h2><p>${escapeHtml(resume.publications.join(' | '))}</p></section>` : ''}
+          ${resume.skills.length ? `<section><h2>Skills</h2><p class="resume-paragraph">${escapeHtml(resume.skills.join(' | '))}</p></section>` : ''}
+          ${awardsHtml}
+          ${publicationsHtml}
         </article>
       </body>
     </html>
