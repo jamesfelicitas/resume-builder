@@ -116,21 +116,43 @@ export default function App() {
       });
 
       if (!response.ok) {
-        setStatus('PDF export failed');
+        let responseBody = '';
+
+        try {
+          responseBody = await response.text();
+        } catch {
+          responseBody = '';
+        }
+
+        console.error('PDF export failed', {
+          url: `${apiBaseUrl}/api/resumes/export/pdf/direct`,
+          status: response.status,
+          statusText: response.statusText,
+          body: responseBody,
+        });
+
+        setStatus(`PDF export failed (${response.status})`);
         return;
       }
 
       const contentType = response.headers.get('content-type') ?? '';
 
       if (!contentType.toLowerCase().includes('application/pdf')) {
-        setStatus('PDF export failed');
+        console.error('PDF export returned unexpected content-type', {
+          url: `${apiBaseUrl}/api/resumes/export/pdf/direct`,
+          contentType,
+        });
+        setStatus('PDF export failed (invalid response)');
         return;
       }
 
       const blob = await response.blob();
 
       if (blob.size === 0) {
-        setStatus('PDF export failed');
+        console.error('PDF export returned empty blob', {
+          url: `${apiBaseUrl}/api/resumes/export/pdf/direct`,
+        });
+        setStatus('PDF export failed (empty PDF)');
         return;
       }
 
@@ -143,8 +165,10 @@ export default function App() {
       document.body.removeChild(anchor);
       window.setTimeout(() => window.URL.revokeObjectURL(url), 60000);
       setStatus('PDF ready');
-    } catch {
-      setStatus('PDF export failed');
+    } catch (error) {
+      console.error('PDF export request threw an error', error);
+      const message = error instanceof Error ? error.message : '';
+      setStatus(message ? `PDF export failed (${message})` : 'PDF export failed');
     }
   }
 

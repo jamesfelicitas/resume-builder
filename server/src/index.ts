@@ -5,10 +5,27 @@ import { resumesRouter } from './routes/resumes.js';
 const app = express();
 const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 
+function readCommaSeparatedEnv(name: string) {
+  return (process.env[name] ?? '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
 const allowedOrigins = new Set([
   'http://localhost:3000',
   'http://localhost:5173',
+  ...readCommaSeparatedEnv('CORS_ALLOWED_ORIGINS'),
 ]);
+
+function isVercelAppOrigin(origin: string) {
+  try {
+    const url = new URL(origin);
+    return url.hostname.endsWith('.vercel.app');
+  } catch {
+    return false;
+  }
+}
 
 const corsOptions = {
   origin: (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) => {
@@ -17,7 +34,7 @@ const corsOptions = {
       return;
     }
 
-    if (allowedOrigins.has(origin) || origin.endsWith('.vercel.app')) {
+    if (allowedOrigins.has(origin) || isVercelAppOrigin(origin)) {
       callback(null, true);
       return;
     }
