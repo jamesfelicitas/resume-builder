@@ -78,6 +78,12 @@ async function sendPdfFromRequestBody(req: Request, res: Response) {
   return sendPdfFromResume(parsed.data, parsed.data.basics.name, res);
 }
 
+resumesRouter.post('/export/pdf', async (req, res) => sendPdfFromRequestBody(req, res));
+
+resumesRouter.post('/export/pdf/direct', async (req, res) => sendPdfFromRequestBody(req, res));
+
+resumesRouter.post('/export/pdf/:id', async (req, res) => sendResumePdf(req.params.id, res));
+
 resumesRouter.post('/', (req, res) => {
   const parsed = resumeSchema.safeParse(req.body);
 
@@ -113,12 +119,6 @@ resumesRouter.put('/:id', (req, res) => {
 
   return res.json(updated);
 });
-
-resumesRouter.post('/export/pdf', async (req, res) => sendPdfFromRequestBody(req, res));
-
-resumesRouter.post('/export/pdf/direct', async (req, res) => sendPdfFromRequestBody(req, res));
-
-resumesRouter.post('/export/pdf/:id', async (req, res) => sendResumePdf(req.params.id, res));
 
 resumesRouter.post('/:id/export/pdf', async (req, res) => sendResumePdf(req.params.id, res));
 
