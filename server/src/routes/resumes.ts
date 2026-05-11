@@ -1,5 +1,6 @@
 import { type Response, Router } from 'express';
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
 import { createDraft, getDraft, updateDraft } from '../lib/draftStore.js';
 import { renderResumeHtml } from '../lib/renderResumeHtml.js';
 import { resumeSchema } from '../validators/resume.js';
@@ -21,8 +22,9 @@ async function sendPdfFromResume(
   res: Response,
 ) {
   const browser = await puppeteer.launch({
+    args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: await chromium.executablePath(),
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
   try {
