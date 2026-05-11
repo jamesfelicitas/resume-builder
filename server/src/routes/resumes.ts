@@ -1,4 +1,4 @@
-import { type Response, Router } from 'express';
+import { type Request, type Response, Router } from 'express';
 import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
 import { createDraft, getDraft, updateDraft } from '../lib/draftStore.js';
@@ -68,6 +68,16 @@ async function sendResumePdf(id: string, res: Response) {
   return sendPdfFromResume(draft.resume, draft.resume.basics.name, res);
 }
 
+async function sendPdfFromRequestBody(req: Request, res: Response) {
+  const parsed = resumeSchema.safeParse(req.body);
+
+  if (!parsed.success) {
+    return res.status(400).json({ errors: parsed.error.flatten() });
+  }
+
+  return sendPdfFromResume(parsed.data, parsed.data.basics.name, res);
+}
+
 resumesRouter.post('/', (req, res) => {
   const parsed = resumeSchema.safeParse(req.body);
 
@@ -104,15 +114,11 @@ resumesRouter.put('/:id', (req, res) => {
   return res.json(updated);
 });
 
-resumesRouter.post('/export/pdf/direct', async (req, res) => {
-  const parsed = resumeSchema.safeParse(req.body);
+resumesRouter.post('/export/pdf', async (req, res) => sendPdfFromRequestBody(req, res));
 
-  if (!parsed.success) {
-    return res.status(400).json({ errors: parsed.error.flatten() });
-  }
+resumesRouter.post('/export/pdf/direct', async (req, res) => sendPdfFromRequestBody(req, res));
 
-  return sendPdfFromResume(parsed.data, parsed.data.basics.name, res);
-});
+resumesRouter.post('/export/pdf/:id', async (req, res) => sendResumePdf(req.params.id, res));
 
 resumesRouter.post('/:id/export/pdf', async (req, res) => sendResumePdf(req.params.id, res));
 

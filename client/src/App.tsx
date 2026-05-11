@@ -107,7 +107,7 @@ export default function App() {
   async function exportPdf() {
     try {
       setStatus('Preparing PDF...');
-      const response = await fetch(`${apiBaseUrl}/api/resumes/export/pdf/direct`, {
+      const response = await fetch(`${apiBaseUrl}/api/resumes/export/pdf`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ export default function App() {
         }
 
         console.error('PDF export failed', {
-          url: `${apiBaseUrl}/api/resumes/export/pdf/direct`,
+          url: `${apiBaseUrl}/api/resumes/export/pdf`,
           status: response.status,
           statusText: response.statusText,
           body: responseBody,
@@ -139,7 +139,7 @@ export default function App() {
 
       if (!contentType.toLowerCase().includes('application/pdf')) {
         console.error('PDF export returned unexpected content-type', {
-          url: `${apiBaseUrl}/api/resumes/export/pdf/direct`,
+          url: `${apiBaseUrl}/api/resumes/export/pdf`,
           contentType,
         });
         setStatus('PDF export failed (invalid response)');
@@ -150,7 +150,7 @@ export default function App() {
 
       if (blob.size === 0) {
         console.error('PDF export returned empty blob', {
-          url: `${apiBaseUrl}/api/resumes/export/pdf/direct`,
+          url: `${apiBaseUrl}/api/resumes/export/pdf`,
         });
         setStatus('PDF export failed (empty PDF)');
         return;
