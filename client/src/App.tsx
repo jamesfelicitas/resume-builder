@@ -7,6 +7,16 @@ import type { ResumeData } from './types';
 const apiBaseUrl = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001');
 const draftResumeKey = 'resume-builder:draft-resume';
 
+function normalizeResume(resume: ResumeData): ResumeData {
+  return {
+    ...resume,
+    basics: {
+      ...resume.basics,
+      phone: resume.basics.phone.replace(/\D/g, '').slice(0, 11),
+    },
+  };
+}
+
 function loadStoredResume() {
   const storedResume = window.localStorage.getItem(draftResumeKey);
 
@@ -15,7 +25,7 @@ function loadStoredResume() {
   }
 
   try {
-    return JSON.parse(storedResume) as ResumeData;
+    return normalizeResume(JSON.parse(storedResume) as ResumeData);
   } catch {
     return defaultResume;
   }
@@ -60,13 +70,14 @@ export default function App() {
 
   async function createDraft(initialResume: ResumeData) {
     setStatus('Creating draft...');
+    const normalizedResume = normalizeResume(initialResume);
 
     const response = await fetch(`${apiBaseUrl}/api/resumes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(initialResume),
+      body: JSON.stringify(normalizedResume),
     });
 
     if (!response.ok) {
@@ -82,13 +93,14 @@ export default function App() {
 
   async function saveDraft(id: string, nextResume: ResumeData) {
     setStatus('Saving...');
+    const normalizedResume = normalizeResume(nextResume);
 
     const response = await fetch(`${apiBaseUrl}/api/resumes/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(nextResume),
+      body: JSON.stringify(normalizedResume),
     });
 
     if (response.status === 404) {
@@ -107,12 +119,13 @@ export default function App() {
   async function exportPdf() {
     try {
       setStatus('Preparing PDF...');
+      const normalizedResume = normalizeResume(resume);
       const response = await fetch(`${apiBaseUrl}/api/resumes/export/pdf`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(resume),
+        body: JSON.stringify(normalizedResume),
       });
 
       if (!response.ok) {
