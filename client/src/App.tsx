@@ -4,7 +4,7 @@ import { ResumeBuilder } from './components/ResumeBuilder';
 import { HarvardResumePreview } from './components/HarvardResumePreview';
 import type { ResumeData } from './types';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+const apiBaseUrl = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001');
 const draftResumeKey = 'resume-builder:draft-resume';
 
 function loadStoredResume() {
