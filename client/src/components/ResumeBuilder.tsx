@@ -137,6 +137,7 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
             type="tel"
             inputMode="numeric"
             pattern="[0-9]*"
+            maxLength={11}
             autoComplete="tel"
             value={resume.basics.phone}
             onChange={(event) => updateBasics('phone', event.target.value.replace(/\D/g, ''))}
