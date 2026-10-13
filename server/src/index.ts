@@ -18,10 +18,10 @@ const allowedOrigins = new Set([
   ...readCommaSeparatedEnv('CORS_ALLOWED_ORIGINS'),
 ]);
 
-function isVercelAppOrigin(origin: string) {
+function isTrustedPreviewOrigin(origin: string) {
   try {
     const url = new URL(origin);
-    return url.hostname.endsWith('.vercel.app');
+    return url.hostname.endsWith('.vercel.app') || url.hostname.endsWith('.netlify.app');
   } catch {
     return false;
   }
@@ -34,7 +34,7 @@ const corsOptions = {
       return;
     }
 
-    if (allowedOrigins.has(origin) || isVercelAppOrigin(origin)) {
+    if (allowedOrigins.has(origin) || isTrustedPreviewOrigin(origin)) {
       callback(null, true);
       return;
     }

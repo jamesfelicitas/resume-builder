@@ -11,22 +11,22 @@ Harvard-style resume builder scaffold using React and Node.js.
 
 Install dependencies in each workspace and then wire the preview to the export endpoint.
 
-## Railway backend deployment
+## Backend deployment
 
-The PDF export runs through the Express server, so that service should be deployed to Railway instead of Vercel.
+The PDF export runs through the Express server, so that service should be deployed as a Node service, such as Render or Railway, instead of Netlify/Vercel static hosting.
 
-Use the repository root as the Railway project directory and let Railway run the root scripts:
+Use the repository root as the backend project directory and let the host run the root scripts:
 
 - Build command: `npm run build`
 - Start command: `npm start`
 
-Set these environment variables on Railway:
+Set these environment variables on the backend host:
 
-- `PORT` is provided by Railway automatically.
-- `CORS_ALLOWED_ORIGINS` should include your Vercel frontend URL, for example `https://your-app.vercel.app`.
+- `PORT` is provided by Render/Railway automatically.
+- `CORS_ALLOWED_ORIGINS` should include your frontend URL, for example `https://harvardresume-builder.netlify.app`.
 
-Set this environment variable on Vercel for the client:
+Set this environment variable on Netlify/Vercel for the client:
 
-- `VITE_API_BASE_URL` should point to your Railway service URL, for example `https://your-backend.up.railway.app`.
+- `VITE_API_BASE_URL` should point to your backend service URL, for example `https://resume-builder-q8nz.onrender.com`.
 
-After that, the Vercel frontend will call the Railway backend for draft saves and PDF downloads.
+After that, the frontend will call the backend for draft saves and PDF downloads.
