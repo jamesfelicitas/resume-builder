@@ -133,7 +133,14 @@ export function ResumeBuilder({ resume, onChange, onExportPdf }: Props) {
         </label>
         <label>
           Phone
-          <input value={resume.basics.phone} onChange={(event) => updateBasics('phone', event.target.value)} />
+          <input
+            type="tel"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="tel"
+            value={resume.basics.phone}
+            onChange={(event) => updateBasics('phone', event.target.value.replace(/\D/g, ''))}
+          />
         </label>
         <label>
           Location
