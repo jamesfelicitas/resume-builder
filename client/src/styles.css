@@ -71,6 +71,25 @@ textarea {
   align-items: start;
 }
 
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 28px;
+  color: rgba(17, 17, 17, 0.68);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.heart-icon {
+  width: 18px;
+  height: 18px;
+  color: #c83f4f;
+  fill: currentColor;
+  flex: 0 0 auto;
+}
+
 .builder-card,
 .resume-page {
   background: #ffffff;
@@ -348,7 +367,8 @@ section h2 {
   }
 
   .app-header,
-  .editor-panel {
+  .editor-panel,
+  .app-footer {
     display: none;
   }
 

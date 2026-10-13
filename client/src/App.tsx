@@ -196,6 +196,13 @@ export default function App() {
           <HarvardResumePreview resume={resume} />
         </section>
       </main>
+
+      <footer className="app-footer">
+        <span>Made by James Felicitas</span>
+        <svg className="heart-icon" viewBox="0 0 24 24" aria-label="with love" role="img">
+          <path d="M12 21s-7.2-4.4-9.4-9.1C.9 8.2 3.1 4.5 6.9 4.5c2 0 3.7 1.1 4.6 2.7.9-1.6 2.6-2.7 4.6-2.7 3.8 0 6 3.7 4.3 7.4C19.2 16.6 12 21 12 21Z" />
+        </svg>
+      </footer>
     </div>
   );
 }
